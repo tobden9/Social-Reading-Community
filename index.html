@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Social Reading Community</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f1ea; /* Warm, paper-like background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border-top: 6px solid #1a365d; /* Civic blue accent */
+        }
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #e25822; /* Warm orange from mockup */
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 22px;
+            color: #1a365d;
+            margin-bottom: 5px;
+        }
+        .tagline {
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .btn-primary {
+            background-color: #3b66bc; /* Accessible blue */
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2c4d8e;
+        }
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+        .divider::before { margin-right: 10px; }
+        .divider::after { margin-left: 10px; }
+        .alternative-login {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-secondary {
+            background-color: #f9f9f9;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #efefef;
+        }
+        .footer-links {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .footer-links a {
+            color: #3b66bc;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="logo-placeholder">CITY</div>
+    <h1>Social Reading Community</h1>
+    <div class="tagline">Read Together, Grow Together</div>
+
+    <form onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
+        <div class="input-group">
+            <label for="email">Email Address or Username</label>
+            <input type="text" id="email" name="email" required aria-required="true" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required aria-required="true" placeholder="Enter your password">
+        </div>
+        <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+
+    <div class="divider">OR</div>
+
+    <div class="alternative-login">
+        <button class="btn-secondary">Get a One-Time Login Link via SMS</button>
+        <button class="btn-secondary">Scan a Poster QR Code to Join</button>
+    </div>
+
+    <div class="footer-links">
+        <p>Don't have an account? <a href="#">Join the community</a></p>
+        <p><a href="#">Forgot your password?</a></p>
+    </div>
+</div>
+
+</body>
+</html>

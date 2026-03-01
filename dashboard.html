@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Dashboard - Social Reading Community</title>
+    <style>
+        :root {
+            --civic-blue-dark: #1a365d;
+            --civic-blue-light: #3b66bc;
+            --warm-bg: #f4f1ea;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-orange: #e25822;
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--warm-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Navigation Bar --- */
+        header {
+            background-color: var(--civic-blue-dark);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-circle {
+            background-color: var(--accent-orange);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Dashboard Layout --- */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 800px) {
+            .dashboard-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        /* --- Card Styles --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border-top: 4px solid transparent;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: var(--civic-blue-dark);
+            border-bottom: 2px solid var(--warm-bg);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* --- Progress Tracking (PB9) --- */
+        .progress-card { border-top-color: var(--accent-orange); }
+        
+        .current-book {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .book-cover-placeholder {
+            width: 80px;
+            height: 120px;
+            background-color: #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .book-details { flex: 1; }
+        .book-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+        .book-author { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .progress-bar-bg {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            width: 100%;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background-color: var(--success-green);
+            height: 100%;
+            width: 65%; /* Example progress */
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            margin-top: 15px;
+        }
+        
+        .btn-primary {
+            background-color: var(--civic-blue-light);
+            color: white;
+        }
+        
+        .btn-primary:hover { background-color: var(--civic-blue-dark); }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--civic-blue-light);
+            border: 1px solid var(--civic-blue-light);
+        }
+
+        /* --- Book Clubs (PB5) --- */
+        .club-card { border-top-color: var(--civic-blue-light); }
+        
+        .club-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--warm-bg);
+        }
+        
+        .club-item:last-child { border-bottom: none; }
+        .club-name { font-weight: bold; color: var(--civic-blue-dark); }
+        .club-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 3px; }
+
+        /* --- Gamification & Recommendations (PB7, PB8) --- */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .badge-icon {
+            font-size: 2rem;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <div class="logo-circle">CITY</div>
+        <span>Social Reading Community</span>
+    </div>
+    <nav aria-label="Main Navigation">
+        <a href="#dashboard" aria-current="page">Dashboard</a>
+        <a href="#clubs">My Clubs</a>
+        <a href="#discover">Discover</a>
+        <a href="#profile">Profile</a>
+    </nav>
+</header>
+
+<div class="dashboard-container">
+    <main>
+        <h1 style="color: var(--civic-blue-dark); margin-bottom: 25px;">Welcome back, Alex!</h1>
+
+        <section class="card progress-card" aria-labelledby="reading-progress">
+            <h2 id="reading-progress">Currently Reading</h2>
+            <div class="current-book">
+                <div class="book-cover-placeholder">Cover Image</div>
+                <div class="book-details">
+                    <div class="book-title">The Dictionary of Lost Words</div>
+                    <div class="book-author">by Pip Williams</div>
+                    
+                    <div class="progress-bar-bg" aria-hidden="true">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>65% completed</span>
+                        <span>260 / 400 pages</span>
+                    </div>
+                    <button class="btn btn-primary">Update Progress</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card club-card" aria-labelledby="my-clubs">
+            <h2 id="my-clubs">My Book Clubs</h2>
+            
+            <div class="club-item">
+                <div>
+                    <div class="club-name">Downtown Fiction Readers</div>
+                    <div class="club-meta">Next Meeting: Friday, 6:00 PM • Library Cafe</div>
+                </div>
+                <a href="#" class="btn btn-outline">View Discussion</a>
+            </div>
+
+            <div class="club-item">
+                <div>
+                    <div class="club-name">Regional History Buffs</div>
+                    <div class="club-meta">Next Meeting: Oct 12 • Online</div>
+                </div>
+                <a href="#" class="btn btn-outline">View Discussion</a>
+            </div>
+        </section>
+    </main>
+
+    <aside>
+        <section class="card" aria-labelledby="milestones">
+            <h2 id="milestones">My Milestones</h2>
+            <div class="badge-container">
+                <div class="badge-icon">🏆</div>
+                <div>
+                    <strong style="display:block; font-size: 0.95rem;">Civic Reader Level 2</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Read 5 books with the community!</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" aria-labelledby="recommendations">
+            <h2 id="recommendations">Recommended for You</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Based on your interest in Historical Fiction:</p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <div class="book-cover-placeholder" style="width: 50px; height: 75px; font-size: 0.6rem;">Book 1</div>
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">All the Light We Cannot See</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Anthony Doerr</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <div class="book-cover-placeholder" style="width: 50px; height: 75px; font-size: 0.6rem;">Book 2</div>
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">The Book Thief</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Markus Zusak</div>
+                </div>
+            </div>
+        </section>
+    </aside>
+</div>
+
+</body>
+</html>
