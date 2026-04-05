@@ -41,77 +41,55 @@
         .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 800px) { .dashboard-container { grid-template-columns: 2fr 1fr; } }
 
-        /* --- Cards & Components --- */
+        /* --- Cards --- */
         .card { background-color: var(--card-bg); border-radius: 10px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid transparent; }
         .card h2 { margin-top: 0; font-size: 1.3rem; color: var(--civic-blue-dark); border-bottom: 2px solid var(--warm-bg); padding-bottom: 10px; margin-bottom: 20px; }
         .btn { display: inline-block; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; margin-top: 15px; }
         .btn-primary { background-color: var(--civic-blue-light); color: white; }
 
         /* --- PB7: Onboarding Modal --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border-top: 6px solid var(--accent-orange); }
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.85); display: none; 
+            justify-content: center; align-items: center; z-index: 9999; 
+        }
+        .modal-content { 
+            background: var(--card-bg); padding: 30px; border-radius: 12px; 
+            max-width: 500px; width: 90%; text-align: center; border-top: 6px solid var(--accent-orange); 
+        }
         .onboarding-step { display: none; }
         .onboarding-step.active { display: block !important; }
         .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
         .genre-chip { padding: 10px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; }
         .genre-chip.selected { background-color: var(--civic-blue-light); color: white; }
 
-       /* PB6: WCAG AAA Compliant High Contrast Mode */
+        /* PB6: High Contrast Mode */
         body.high-contrast {
             --warm-bg: #000000;
             --card-bg: #000000;
             --text-main: #FFFFFF;
-            --text-muted: #FFFF00;      /* Bright Yellow for secondary text */
-            --civic-blue-dark: #00FF00;  /* Neon Green for headers */
-            --civic-blue-light: #00FFFF; /* Cyan for links/buttons */
+            --text-muted: #FFFF00;
+            --civic-blue-dark: #00FF00;
+            --civic-blue-light: #00FFFF;
             --accent-orange: #FFFFFF;
         }
-
-        /* Ensure borders are visible in dark mode */
-        body.high-contrast .card, 
-        body.high-contrast .club-card, 
-        body.high-contrast .book-card {
+        body.high-contrast .logo-circle {
+            background-color: #000000 !important;
+            color: #00FF00 !important;
             border: 2px solid #00FF00 !important;
         }
-
-        /* Ensure buttons stand out */
-        body.high-contrast .btn-primary {
-            background-color: #00FF00 !important;
-            color: #000000 !important;
-            border: 2px solid #FFFFFF !important;
-        }
+        body.high-contrast .card { border: 2px solid #00FF00 !important; }
+        body.high-contrast .btn-primary { background-color: #00FF00 !important; color: #000000 !important; border: 2px solid #FFFFFF !important; }
 
         .contrast-toggle {
-            position: fixed;   /* Keep it floating */
-            bottom: 20px;      /* 20 pixels from the bottom edge */
-            right: 20px;       /* 20 pixels from the right edge */
-            padding: 10px 15px;
-            background: var(--civic-blue-dark);
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            border: 2px solid white;
-            z-index: 9999;     /* Ensure it stays on top of all other elements */
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: bold;
+            position: fixed; bottom: 20px; right: 20px; padding: 10px 15px;
+            background: var(--civic-blue-dark); color: white;
+            border-radius: 50px; cursor: pointer; border: 2px solid white;
+            z-index: 9999; display: flex; align-items: center; gap: 5px; font-weight: bold;
         }
     </style>
 </head>
 <body>
-
-<header>
-  <div class="logo-area"><div class="logo-circle">CITY</div><span>Social Reading Community</span></div>
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="BookClubFlow.html">Book Clubs</a>
-    <a href="BookCategorization.html">Discover</a>
-    <a href="index.html" onclick="localStorage.clear()">Logout</a>
-  </nav>
-</header>
-
-<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
 
 <div id="onboardingModal" class="modal-overlay">
     <div class="modal-content">
@@ -142,6 +120,18 @@
     </div>
 </div>
 
+<header>
+  <div class="logo-area"><div class="logo-circle">CITY</div><span>Social Reading Community</span></div>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="BookClubFlow.html">Book Clubs</a>
+    <a href="BookCategorization.html">Discover</a>
+    <a href="index.html" onclick="localStorage.clear()">Logout</a>
+  </nav>
+</header>
+
+<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+
 <div class="dashboard-container">
     <main>
         <h1 id="welcomeHeader">Welcome back, Alex!</h1>
@@ -160,17 +150,25 @@
 
 <script>
     window.onload = function() {
-        // Apply Contrast from memory
-        if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
+        // PB6: Check High Contrast (Still use localStorage so theme stays forever)
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
 
-        // Check Onboarding status
-        const hasCompleted = localStorage.getItem('onboardingComplete');
-        const savedName = localStorage.getItem('readerName');
-        
-        if (!hasCompleted) {
-            document.getElementById('onboardingModal').style.display = 'flex';
-        } else if (savedName) {
-            document.getElementById('welcomeHeader').innerText = `Welcome back, ${savedName}!`;
+        // PB7: SESSION-BASED ONBOARDING
+        // We use sessionStorage so it resets when the browser/tab is closed
+        const hasCompletedSession = sessionStorage.getItem('onboardingComplete');
+        const modal = document.getElementById('onboardingModal');
+
+        if (!hasCompletedSession) {
+            modal.style.display = 'flex'; 
+        } else {
+            // Update UI with session data while navigating between pages
+            const savedName = sessionStorage.getItem('readerName');
+            const savedGoal = sessionStorage.getItem('readingGoal');
+            
+            if (savedName) document.getElementById('welcomeHeader').innerText = `Welcome back, ${savedName}!`;
+            if (savedGoal) document.getElementById('goalText').innerText = `Goal: Read ${savedGoal} books!`;
         }
     };
 
@@ -180,14 +178,17 @@
             s.classList.remove('active');
         });
         document.getElementById('step' + step).style.display = 'block';
+        document.getElementById('step' + step).classList.add('active');
     }
 
     function finishOnboarding() {
         const name = document.getElementById('userNameInput').value || "Alex";
         const goal = document.getElementById('goalRange').value;
         
-        localStorage.setItem('onboardingComplete', 'true');
-        localStorage.setItem('readerName', name);
+        // SAVE TO SESSION ONLY
+        sessionStorage.setItem('onboardingComplete', 'true');
+        sessionStorage.setItem('readerName', name);
+        sessionStorage.setItem('readingGoal', goal);
         
         document.getElementById('welcomeHeader').innerText = `Welcome back, ${name}!`;
         document.getElementById('goalText').innerText = `Goal: Read ${goal} books!`;
