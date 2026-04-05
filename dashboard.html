@@ -205,9 +205,127 @@
             font-size: 2rem;
         }
 
+        /* --- Sprint 3: Onboarding Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex; /* Changed to none via JS after first run */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border-top: 6px solid var(--accent-orange);
+        }
+
+        .onboarding-step { display: none; }
+        .onboarding-step.active { display: block; }
+
+        .genre-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .genre-chip {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .genre-chip.selected {
+            background-color: var(--civic-blue-light);
+            color: white;
+            border-color: var(--civic-blue-light);
+        }
+
+        /* --- PB6: Accessibility High Contrast Mode --- */
+        body.high-contrast {
+            --warm-bg: #000000;
+            --card-bg: #1a1a1a;
+            --text-main: #ffffffac;
+            --text-muted: #2bff00;
+            --civic-blue-dark: #00ff33;
+            --civic-blue-light: #ffffff;
+        }
+
+        .contrast-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            background: var(--civic-blue-dark);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        /* Ensures the active step actually shows up */
+        .onboarding-step.active { 
+            display: block !important; 
+        }
+
+        /* Accessibility: Improve focus visibility for keyboard users (PB6) */
+        button:focus, input:focus {
+            outline: 3px solid var(--accent-orange);
+            outline-offset: 2px;
+        }
+
+        
+
     </style>
 </head>
 <body>
+
+<button class="contrast-toggle" onclick="toggleContrast()" aria-label="Toggle High Contrast Mode">
+    🌓 Contrast
+</button>
+
+<div id="onboardingModal" class="modal-overlay" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-content">
+        <div id="step1" class="onboarding-step active">
+            <h2 id="modalTitle">Welcome, Reader!</h2>
+            <p>Let's personalize your library. What should we call you?</p>
+            <input type="text" id="userNameInput" placeholder="Enter name..." 
+                   style="width: 80%; padding: 10px; margin-bottom: 20px;">
+            <br>
+            <button class="btn btn-primary" onclick="nextStep(2)">Next: Interests</button>
+        </div>
+
+        <div id="step2" class="onboarding-step">
+            <h2>Select Your Genres</h2>
+            <p>Pick at least two to help our "AI" suggest books.</p>
+            <div class="genre-grid">
+                <div class="genre-chip" onclick="this.classList.toggle('selected')">Fantasy</div>
+                <div class="genre-chip" onclick="this.classList.toggle('selected')">History</div>
+                <div class="genre-chip" onclick="this.classList.toggle('selected')">Sci-Fi</div>
+                <div class="genre-chip" onclick="this.classList.toggle('selected')">Mystery</div>
+            </div>
+            <button class="btn btn-primary" onclick="nextStep(3)">Next: Final Goal</button>
+        </div>
+
+        <div id="step3" class="onboarding-step">
+            <h2>Set a Reading Goal</h2>
+            <p>How many books do you want to read this year?</p>
+            <input type="range" min="1" max="50" value="10" id="goalRange" oninput="this.nextElementSibling.value = this.value">
+            <output>10</output> Books
+            <br><br>
+            <button class="btn btn-primary" onclick="finishOnboarding()">Start Reading!</button>
+        </div>
+    </div>
+</div>    
 
 <header>
     <div class="logo-area">
@@ -301,6 +419,48 @@
         </section>
     </aside>
 </div>
+
+<script>
+    // PB6: Toggle High Contrast
+    function toggleContrast() {
+        document.body.classList.toggle('high-contrast');
+    }
+
+    // Onboarding Logic
+    function nextStep(step) {
+        // Hide all steps first
+        document.querySelectorAll('.onboarding-step').forEach(el => {
+            el.classList.remove('active');
+            el.style.display = 'none'; 
+        });
+        
+        // Show the target step
+        const nextEl = document.getElementById('step' + step);
+        if (nextEl) {
+            nextEl.classList.add('active');
+            nextEl.style.display = 'block';
+        }
+    }
+
+    function finishOnboarding() {
+        const nameInput = document.getElementById('userNameInput').value;
+        const name = nameInput.trim() !== "" ? nameInput : "Alex";
+        const goal = document.getElementById('goalRange').value;
+        
+        // PB7: Simulate personalization
+        // Update the main heading
+        document.querySelector('h1').innerText = `Welcome back, ${name}!`;
+        
+        // Update the milestone text specifically (not the heading)
+        const milestoneSubtext = document.querySelector('.badge-container span');
+        if (milestoneSubtext) {
+            milestoneSubtext.innerText = `Goal: Read ${goal} books this year!`;
+        }
+        
+        // Close Modal
+        document.getElementById('onboardingModal').style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
