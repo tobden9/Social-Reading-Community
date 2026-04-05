@@ -234,6 +234,7 @@
         .footer-links a:hover {
             text-decoration: underline;
         }
+
     </style>
 </head>
 <body>
@@ -304,7 +305,6 @@
 </div>
 
 <script>
-    // JavaScript to handle the flow between role selection and login
     function showLogin(role) {
         // Hide role selection, show login form
         document.getElementById('role-selection').style.display = 'none';
@@ -317,25 +317,27 @@
 
         if (role === 'reader') {
             formTitle.innerText = 'Reader Login';
-            readerAlts.style.display = 'block'; // Show QR/SMS options
+            readerAlts.style.display = 'block';
             staffAlts.style.display = 'none';
-            // Send to reader dashboard
-            authForm.setAttribute('onsubmit', "event.preventDefault(); window.location.href='dashboard.html';");
+            // Logic to move to dashboard
+            authForm.onsubmit = function(e) {
+                e.preventDefault();
+                window.location.href = 'dashboard.html';
+            };
         } else if (role === 'staff') {
             formTitle.innerText = 'Library Staff Portal';
-            readerAlts.style.display = 'none'; // Hide QR/SMS options
-            staffAlts.style.display = 'block'; // Show staff footer
-            // Send to admin dashboard
-            authForm.setAttribute('onsubmit', "event.preventDefault(); window.location.href='dashboard.html';");
+            readerAlts.style.display = 'none';
+            staffAlts.style.display = 'block';
+            authForm.onsubmit = function(e) {
+                e.preventDefault();
+                window.location.href = 'dashboard.html';
+            };
         }
     }
 
     function goBack() {
-        // Hide login form, show role selection
         document.getElementById('login-section').style.display = 'none';
         document.getElementById('role-selection').style.display = 'block';
-        
-        // Clear the form fields when going back
         document.getElementById('auth-form').reset();
     }
 </script>

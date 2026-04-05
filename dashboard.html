@@ -24,7 +24,7 @@
             padding: 0;
         }
 
-        /* --- Navigation Bar --- */
+        /* --- Navigation & Layout --- */
         header {
             background-color: var(--civic-blue-dark);
             color: white;
@@ -35,432 +35,169 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
+        .logo-area { display: flex; align-items: center; gap: 15px; font-weight: bold; font-size: 1.2rem; }
+        .logo-circle { background-color: var(--accent-orange); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
+        .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 800px) { .dashboard-container { grid-template-columns: 2fr 1fr; } }
 
-        .logo-circle {
-            background-color: var(--accent-orange);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.8rem;
-        }
+        /* --- Cards & Components --- */
+        .card { background-color: var(--card-bg); border-radius: 10px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid transparent; }
+        .card h2 { margin-top: 0; font-size: 1.3rem; color: var(--civic-blue-dark); border-bottom: 2px solid var(--warm-bg); padding-bottom: 10px; margin-bottom: 20px; }
+        .btn { display: inline-block; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; margin-top: 15px; }
+        .btn-primary { background-color: var(--civic-blue-light); color: white; }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.95rem;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        /* --- Dashboard Layout --- */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 800px) {
-            .dashboard-container {
-                grid-template-columns: 2fr 1fr;
-            }
-        }
-
-        /* --- Card Styles --- */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            border-top: 4px solid transparent;
-        }
-
-        .card h2 {
-            margin-top: 0;
-            font-size: 1.3rem;
-            color: var(--civic-blue-dark);
-            border-bottom: 2px solid var(--warm-bg);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* --- Progress Tracking (PB9) --- */
-        .progress-card { border-top-color: var(--accent-orange); }
-        
-        .current-book {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .book-cover-placeholder {
-            width: 80px;
-            height: 120px;
-            background-color: #ddd;
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #888;
-            font-size: 0.8rem;
-            text-align: center;
-            padding: 5px;
-        }
-
-        .book-details { flex: 1; }
-        .book-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
-        .book-author { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
-        
-        .progress-bar-bg {
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            height: 10px;
-            width: 100%;
-            margin-bottom: 5px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            background-color: var(--success-green);
-            height: 100%;
-            width: 65%; /* Example progress */
-        }
-
-        .progress-text {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* --- Buttons --- */
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            margin-top: 15px;
-        }
-        
-        .btn-primary {
-            background-color: var(--civic-blue-light);
-            color: white;
-        }
-        
-        .btn-primary:hover { background-color: var(--civic-blue-dark); }
-        
-        .btn-outline {
-            background-color: transparent;
-            color: var(--civic-blue-light);
-            border: 1px solid var(--civic-blue-light);
-        }
-
-        /* --- Book Clubs (PB5) --- */
-        .club-card { border-top-color: var(--civic-blue-light); }
-        
-        .club-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--warm-bg);
-        }
-        
-        .club-item:last-child { border-bottom: none; }
-        .club-name { font-weight: bold; color: var(--civic-blue-dark); }
-        .club-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 3px; }
-
-        /* --- Gamification & Recommendations (PB7, PB8) --- */
-        .badge-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .badge-icon {
-            font-size: 2rem;
-        }
-
-        /* --- Sprint 3: Onboarding Modal Styles --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex; /* Changed to none via JS after first run */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            border-top: 6px solid var(--accent-orange);
-        }
-
+        /* --- PB7: Onboarding Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; border-top: 6px solid var(--accent-orange); }
         .onboarding-step { display: none; }
-        .onboarding-step.active { display: block; }
+        .onboarding-step.active { display: block !important; }
+        .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .genre-chip { padding: 10px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; }
+        .genre-chip.selected { background-color: var(--civic-blue-light); color: white; }
 
-        .genre-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .genre-chip {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .genre-chip.selected {
-            background-color: var(--civic-blue-light);
-            color: white;
-            border-color: var(--civic-blue-light);
-        }
-
-        /* --- PB6: Accessibility High Contrast Mode --- */
+       /* PB6: WCAG AAA Compliant High Contrast Mode */
         body.high-contrast {
             --warm-bg: #000000;
-            --card-bg: #1a1a1a;
-            --text-main: #ffffffac;
-            --text-muted: #2bff00;
-            --civic-blue-dark: #00ff33;
-            --civic-blue-light: #ffffff;
+            --card-bg: #000000;
+            --text-main: #FFFFFF;
+            --text-muted: #FFFF00;      /* Bright Yellow for secondary text */
+            --civic-blue-dark: #00FF00;  /* Neon Green for headers */
+            --civic-blue-light: #00FFFF; /* Cyan for links/buttons */
+            --accent-orange: #FFFFFF;
+        }
+
+        /* Ensure borders are visible in dark mode */
+        body.high-contrast .card, 
+        body.high-contrast .club-card, 
+        body.high-contrast .book-card {
+            border: 2px solid #00FF00 !important;
+        }
+
+        /* Ensure buttons stand out */
+        body.high-contrast .btn-primary {
+            background-color: #00FF00 !important;
+            color: #000000 !important;
+            border: 2px solid #FFFFFF !important;
         }
 
         .contrast-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px;
+            position: fixed;   /* Keep it floating */
+            bottom: 20px;      /* 20 pixels from the bottom edge */
+            right: 20px;       /* 20 pixels from the right edge */
+            padding: 10px 15px;
             background: var(--civic-blue-dark);
             color: white;
             border-radius: 50px;
             cursor: pointer;
             border: 2px solid white;
+            z-index: 9999;     /* Ensure it stays on top of all other elements */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
         }
-
-        /* Ensures the active step actually shows up */
-        .onboarding-step.active { 
-            display: block !important; 
-        }
-
-        /* Accessibility: Improve focus visibility for keyboard users (PB6) */
-        button:focus, input:focus {
-            outline: 3px solid var(--accent-orange);
-            outline-offset: 2px;
-        }
-
-        
-
     </style>
 </head>
 <body>
 
-<button class="contrast-toggle" onclick="toggleContrast()" aria-label="Toggle High Contrast Mode">
-    🌓 Contrast
-</button>
+<header>
+  <div class="logo-area"><div class="logo-circle">CITY</div><span>Social Reading Community</span></div>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="BookClubFlow.html">Book Clubs</a>
+    <a href="BookCategorization.html">Discover</a>
+    <a href="index.html" onclick="localStorage.clear()">Logout</a>
+  </nav>
+</header>
 
-<div id="onboardingModal" class="modal-overlay" role="dialog" aria-labelledby="modalTitle">
+<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+
+<div id="onboardingModal" class="modal-overlay">
     <div class="modal-content">
         <div id="step1" class="onboarding-step active">
-            <h2 id="modalTitle">Welcome, Reader!</h2>
-            <p>Let's personalize your library. What should we call you?</p>
-            <input type="text" id="userNameInput" placeholder="Enter name..." 
-                   style="width: 80%; padding: 10px; margin-bottom: 20px;">
+            <h2>Welcome!</h2>
+            <p>What is your name?</p>
+            <input type="text" id="userNameInput" placeholder="Name..." style="width: 80%; padding: 12px; margin-bottom: 20px;">
             <br>
             <button class="btn btn-primary" onclick="nextStep(2)">Next: Interests</button>
         </div>
-
         <div id="step2" class="onboarding-step">
-            <h2>Select Your Genres</h2>
-            <p>Pick at least two to help our "AI" suggest books.</p>
+            <h2>Your Interests</h2>
             <div class="genre-grid">
                 <div class="genre-chip" onclick="this.classList.toggle('selected')">Fantasy</div>
                 <div class="genre-chip" onclick="this.classList.toggle('selected')">History</div>
                 <div class="genre-chip" onclick="this.classList.toggle('selected')">Sci-Fi</div>
                 <div class="genre-chip" onclick="this.classList.toggle('selected')">Mystery</div>
             </div>
-            <button class="btn btn-primary" onclick="nextStep(3)">Next: Final Goal</button>
+            <button class="btn btn-primary" onclick="nextStep(3)">Next: Goal</button>
         </div>
-
         <div id="step3" class="onboarding-step">
-            <h2>Set a Reading Goal</h2>
-            <p>How many books do you want to read this year?</p>
+            <h2>Annual Reading Goal</h2>
             <input type="range" min="1" max="50" value="10" id="goalRange" oninput="this.nextElementSibling.value = this.value">
             <output>10</output> Books
             <br><br>
-            <button class="btn btn-primary" onclick="finishOnboarding()">Start Reading!</button>
+            <button class="btn btn-primary" onclick="finishOnboarding()">Finish</button>
         </div>
     </div>
-</div>    
-
-<header>
-    <div class="logo-area">
-        <div class="logo-circle">CITY</div>
-        <span>Social Reading Community</span>
-    </div>
-    <nav aria-label="Main Navigation">
-        <a href="#dashboard" aria-current="page">Dashboard</a>
-        <a href="#clubs">My Clubs</a>
-        <a href="#discover">Discover</a>
-        <a href="#profile">Profile</a>
-    </nav>
-</header>
+</div>
 
 <div class="dashboard-container">
     <main>
-        <h1 style="color: var(--civic-blue-dark); margin-bottom: 25px;">Welcome back, Alex!</h1>
-
-        <section class="card progress-card" aria-labelledby="reading-progress">
-            <h2 id="reading-progress">Currently Reading</h2>
-            <div class="current-book">
-                <div class="book-cover-placeholder">Cover Image</div>
-                <div class="book-details">
-                    <div class="book-title">The Dictionary of Lost Words</div>
-                    <div class="book-author">by Pip Williams</div>
-                    
-                    <div class="progress-bar-bg" aria-hidden="true">
-                        <div class="progress-bar-fill"></div>
-                    </div>
-                    <div class="progress-text">
-                        <span>65% completed</span>
-                        <span>260 / 400 pages</span>
-                    </div>
-                    <button class="btn btn-primary">Update Progress</button>
-                </div>
-            </div>
-        </section>
-
-        <section class="card club-card" aria-labelledby="my-clubs">
-            <h2 id="my-clubs">My Book Clubs</h2>
-            
-            <div class="club-item">
-                <div>
-                    <div class="club-name">Downtown Fiction Readers</div>
-                    <div class="club-meta">Next Meeting: Friday, 6:00 PM • Library Cafe</div>
-                </div>
-                <a href="#" class="btn btn-outline">View Discussion</a>
-            </div>
-
-            <div class="club-item">
-                <div>
-                    <div class="club-name">Regional History Buffs</div>
-                    <div class="club-meta">Next Meeting: Oct 12 • Online</div>
-                </div>
-                <a href="#" class="btn btn-outline">View Discussion</a>
-            </div>
+        <h1 id="welcomeHeader">Welcome back, Alex!</h1>
+        <section class="card">
+            <h2>Currently Reading</h2>
+            <p>The Dictionary of Lost Words - 65% Complete</p>
         </section>
     </main>
-
     <aside>
-        <section class="card" aria-labelledby="milestones">
-            <h2 id="milestones">My Milestones</h2>
-            <div class="badge-container">
-                <div class="badge-icon">🏆</div>
-                <div>
-                    <strong style="display:block; font-size: 0.95rem;">Civic Reader Level 2</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">Read 5 books with the community!</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="card" aria-labelledby="recommendations">
-            <h2 id="recommendations">Recommended for You</h2>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Based on your interest in Historical Fiction:</p>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <div class="book-cover-placeholder" style="width: 50px; height: 75px; font-size: 0.6rem;">Book 1</div>
-                <div>
-                    <div style="font-weight: bold; font-size: 0.9rem;">All the Light We Cannot See</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">Anthony Doerr</div>
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 10px;">
-                <div class="book-cover-placeholder" style="width: 50px; height: 75px; font-size: 0.6rem;">Book 2</div>
-                <div>
-                    <div style="font-weight: bold; font-size: 0.9rem;">The Book Thief</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">Markus Zusak</div>
-                </div>
-            </div>
+        <section class="card">
+            <h2>Milestones</h2>
+            <span id="goalText">Set your goal in onboarding!</span>
         </section>
     </aside>
 </div>
 
 <script>
-    // PB6: Toggle High Contrast
-    function toggleContrast() {
-        document.body.classList.toggle('high-contrast');
-    }
+    window.onload = function() {
+        // Apply Contrast from memory
+        if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
 
-    // Onboarding Logic
-    function nextStep(step) {
-        // Hide all steps first
-        document.querySelectorAll('.onboarding-step').forEach(el => {
-            el.classList.remove('active');
-            el.style.display = 'none'; 
-        });
+        // Check Onboarding status
+        const hasCompleted = localStorage.getItem('onboardingComplete');
+        const savedName = localStorage.getItem('readerName');
         
-        // Show the target step
-        const nextEl = document.getElementById('step' + step);
-        if (nextEl) {
-            nextEl.classList.add('active');
-            nextEl.style.display = 'block';
+        if (!hasCompleted) {
+            document.getElementById('onboardingModal').style.display = 'flex';
+        } else if (savedName) {
+            document.getElementById('welcomeHeader').innerText = `Welcome back, ${savedName}!`;
         }
+    };
+
+    function nextStep(step) {
+        document.querySelectorAll('.onboarding-step').forEach(s => {
+            s.style.display = 'none';
+            s.classList.remove('active');
+        });
+        document.getElementById('step' + step).style.display = 'block';
     }
 
     function finishOnboarding() {
-        const nameInput = document.getElementById('userNameInput').value;
-        const name = nameInput.trim() !== "" ? nameInput : "Alex";
+        const name = document.getElementById('userNameInput').value || "Alex";
         const goal = document.getElementById('goalRange').value;
         
-        // PB7: Simulate personalization
-        // Update the main heading
-        document.querySelector('h1').innerText = `Welcome back, ${name}!`;
+        localStorage.setItem('onboardingComplete', 'true');
+        localStorage.setItem('readerName', name);
         
-        // Update the milestone text specifically (not the heading)
-        const milestoneSubtext = document.querySelector('.badge-container span');
-        if (milestoneSubtext) {
-            milestoneSubtext.innerText = `Goal: Read ${goal} books this year!`;
-        }
-        
-        // Close Modal
+        document.getElementById('welcomeHeader').innerText = `Welcome back, ${name}!`;
+        document.getElementById('goalText').innerText = `Goal: Read ${goal} books!`;
         document.getElementById('onboardingModal').style.display = 'none';
     }
-</script>
 
+    function toggleContrast() {
+        const active = document.body.classList.toggle('high-contrast');
+        localStorage.setItem('highContrast', active);
+    }
+</script>
 </body>
 </html>

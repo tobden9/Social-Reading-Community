@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book Clubs - Social Reading Community</title>
+<style>
+  :root {
+    --civic-blue-dark: #1a365d;
+    --civic-blue-light: #3b66bc;
+    --warm-bg: #f4f1ea;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --accent-orange: #e25822;
+    --success-green: #2e7d32;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--warm-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+
+  /* NAV — matches dashboard.html header */
+  header {
+    background-color: var(--civic-blue-dark);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .logo-circle {
+    background-color: var(--accent-orange);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 0.95rem;
+  }
+
+  nav a:hover { text-decoration: underline; }
+  nav a.active { border-bottom: 2px solid var(--accent-orange); padding-bottom: 2px; }
+
+  /* STEP BAR */
+  .step-bar {
+    background: var(--card-bg);
+    border-bottom: 1px solid #ddd;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .steps {
+    display: flex;
+    align-items: center;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 58%;
+    width: 84%;
+    height: 2px;
+    background: #ddd;
+    transition: background 0.3s;
+  }
+
+  .step.done:not(:last-child)::after { background: var(--civic-blue-light); }
+
+  .step-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: #999;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+
+  .step.active .step-circle {
+    border-color: var(--civic-blue-light);
+    background: var(--civic-blue-light);
+    color: white;
+  }
+
+  .step.done .step-circle {
+    border-color: var(--success-green);
+    background: var(--success-green);
+    color: white;
+  }
+
+  .step-label {
+    font-size: 0.68rem;
+    color: #999;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  .step.active .step-label { color: var(--civic-blue-light); font-weight: 600; }
+  .step.done .step-label { color: var(--success-green); }
+
+  /* MAIN LAYOUT */
+  .main-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px 50px;
+  }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex;
+    background: var(--card-bg);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn.active {
+    background: var(--civic-blue-dark);
+    color: white;
+  }
+
+  /* CARD — matches .card from dashboard.html */
+  .card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    border-top: 4px solid transparent;
+  }
+
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    color: var(--civic-blue-dark);
+    border-bottom: 2px solid var(--warm-bg);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .card-blue { border-top-color: var(--civic-blue-light); }
+  .card-orange { border-top-color: var(--accent-orange); }
+
+  /* PAGE FLOW */
+  .step-page { display: none; }
+  .step-page.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-heading {
+    color: var(--civic-blue-dark);
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+  }
+
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  /* FILTER CHIPS */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .filter-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background: var(--card-bg);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.2s;
+  }
+
+  .filter-chip:hover { border-color: var(--civic-blue-light); color: var(--civic-blue-light); }
+  .filter-chip.active { background: var(--civic-blue-light); border-color: var(--civic-blue-light); color: white; }
+
+  /* CLUB GRID */
+  .clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+  }
+
+  .club-card {
+    background: var(--card-bg);
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    border-top: 4px solid var(--civic-blue-light);
+  }
+
+  .club-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .club-card-img {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    background: #f0f4f8;
+  }
+
+  .club-card-body { padding: 12px 15px 5px; }
+
+  .club-card-genre {
+    font-size: 0.72rem;
+    color: var(--accent-orange);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .club-card-name {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--civic-blue-dark);
+    margin-bottom: 6px;
+  }
+
+  .club-card-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .club-card-btn {
+    display: block;
+    width: calc(100% - 30px);
+    margin: 0 15px 15px;
+    padding: 8px;
+    background: var(--civic-blue-light);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .club-card-btn:hover { background: var(--civic-blue-dark); }
+  .club-card-btn.full { background: #ccc; cursor: default; }
+
+  /* FORMS */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-main);
+  }
+
+  .required { color: var(--accent-orange); }
+
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  input:focus, textarea:focus, select:focus { border-color: var(--civic-blue-light); }
+  textarea { resize: vertical; min-height: 85px; }
+  .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+
+  .genre-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+
+  .genre-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+  }
+
+  .genre-pill.selected {
+    background: #e8f0fb;
+    border-color: var(--civic-blue-light);
+    color: var(--civic-blue-dark);
+    font-weight: 600;
+  }
+
+  .privacy-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .privacy-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .privacy-card.selected { border-color: var(--civic-blue-light); background: #f0f4fb; }
+  .privacy-card h4 { font-size: 0.9rem; margin-bottom: 4px; color: var(--civic-blue-dark); }
+  .privacy-card p { font-size: 0.78rem; color: var(--text-muted); }
+
+  .frequency-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+  .freq-btn {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    border-radius: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .freq-btn.selected {
+    border-color: var(--civic-blue-light);
+    background: #e8f0fb;
+    color: var(--civic-blue-dark);
+    font-weight: 600;
+  }
+
+  /* BUTTONS — matches dashboard.html */
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary { background-color: var(--civic-blue-light); color: white; }
+  .btn-primary:hover { background-color: var(--civic-blue-dark); }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--civic-blue-light);
+    border: 1px solid var(--civic-blue-light);
+  }
+  .btn-outline:hover { background: var(--civic-blue-light); color: white; }
+
+  .btn-secondary { background-color: #f9f9f9; color: var(--text-main); border: 1px solid #ccc; }
+  .btn-secondary:hover { background-color: #efefef; }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  /* CONFIRM SUMMARY */
+  .confirm-summary {
+    background: var(--warm-bg);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 18px;
+  }
+
+  .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    padding: 6px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .confirm-row:last-child { border-bottom: none; }
+  .confirm-row span:first-child { color: var(--text-muted); }
+  .confirm-row span:last-child { font-weight: 600; color: var(--civic-blue-dark); }
+
+  /* SUCCESS */
+  .success-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    background: #e8f5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 20px;
+  }
+
+  .success-screen h2 { color: var(--civic-blue-dark); font-size: 1.4rem; margin-bottom: 10px; }
+  .success-screen p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; max-width: 420px; margin-left: auto; margin-right: auto; }
+  .success-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--civic-blue-light);
+    font-size: 0.875rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 18px;
+    padding: 0;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .club-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .club-detail-emoji {
+    font-size: 2.5rem;
+    background: #f0f4f8;
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .club-detail-info h2 { margin: 0 0 4px; font-size: 1.3rem; color: var(--civic-blue-dark); border: none; padding: 0; }
+  .club-detail-info span { font-size: 0.85rem; color: var(--accent-orange); font-weight: 700; text-transform: uppercase; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .privacy-options { grid-template-columns: 1fr; }
+    header { flex-direction: column; gap: 10px; align-items: flex-start; }
+    nav a { margin-left: 0; margin-right: 15px; }
+  }
+
+  /* PB6: High Contrast Mode Colors (AAA Compliant) */
+    body.high-contrast {
+        --warm-bg: #000000;
+        --card-bg: #000000;
+        --text-main: #FFFFFF;
+        --text-muted: #FFFF00;      /* Bright Yellow */
+        --civic-blue-dark: #00FF00;  /* Neon Green */
+        --civic-blue-light: #00FFFF; /* Cyan */
+        --accent-orange: #FFFFFF;
+    }
+
+    body.high-contrast .card, 
+    body.high-contrast .club-card, 
+    body.high-contrast .book-card {
+        border: 2px solid #00FF00 !important;
+    }
+
+    body.high-contrast .btn-primary {
+        background-color: #00FF00 !important;
+        color: #000000 !important;
+        border: 2px solid #FFFFFF !important;
+    }
+
+    /* Float the Toggle Button */
+    .contrast-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+        background: var(--civic-blue-dark);
+        color: white;
+        border-radius: 50px;
+        cursor: pointer;
+        border: 2px solid white;
+        z-index: 1000;
+    }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-circle">CITY</div>
+    <span>Social Reading Community</span>
+  </div>
+  <nav aria-label="Main Navigation">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="BookClubFlow.html">Book Clubs</a>
+    <a href="BookCategorization.html">Discover</a>
+    <a href="index.html">Logout</a>
+   </nav>
+</header>
+
+<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+
+<div class="step-bar">
+  <div class="steps" id="stepBar">
+    <div class="step active" id="stepInd1">
+      <div class="step-circle">1</div>
+      <div class="step-label">Browse</div>
+    </div>
+    <div class="step" id="stepInd2">
+      <div class="step-circle">2</div>
+      <div class="step-label">Details</div>
+    </div>
+    <div class="step" id="stepInd3">
+      <div class="step-circle">3</div>
+      <div class="step-label">Confirm</div>
+    </div>
+  </div>
+</div>
+
+<div class="main-container">
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('join', event)">Join a Club</button>
+    <button class="mode-btn" onclick="setMode('create', event)">Create a Club</button>
+  </div>
+
+  <!-- JOIN FLOW -->
+  <div id="joinFlow">
+
+    <div class="step-page active" id="join-step1">
+      <h1 class="section-heading">Find Your Reading Club</h1>
+      <p class="section-sub">Browse active clubs in your community and join in a few steps.</p>
+      <div class="filter-row">
+        <button class="filter-chip active" onclick="filterClubs(this, 'all')">All</button>
+        <button class="filter-chip" onclick="filterClubs(this, 'fiction')">Fiction</button>
+        <button class="filter-chip" onclick="filterClubs(this, 'nonfiction')">Non-Fiction</button>
+        <button class="filter-chip" onclick="filterClubs(this, 'scifi')">Sci-Fi</button>
+        <button class="filter-chip" onclick="filterClubs(this, 'history')">History</button>
+        <button class="filter-chip" onclick="filterClubs(this, 'open')">Open to Join</button>
+      </div>
+      <div class="clubs-grid" id="clubsGrid"></div>
+    </div>
+
+    <div class="step-page" id="join-step2">
+      <button class="back-link" onclick="goJoinStep(1)">← Back to Clubs</button>
+      <div class="card card-blue">
+        <div class="club-detail-header">
+          <div class="club-detail-emoji" id="detailEmoji">📖</div>
+          <div class="club-detail-info">
+            <h2 id="detailClubName">Club Name</h2>
+            <span id="detailGenre">Genre</span>
+          </div>
+        </div>
+        <div class="confirm-summary" id="clubDetailSummary"></div>
+        <div>
+          <label for="joinMessage">Why do you want to join? <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+          <textarea id="joinMessage" placeholder="Share a little about yourself or your reading interests..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="goJoinStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goJoinStep(3)">Request to Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-page" id="join-step3">
+      <div class="card">
+        <div class="success-screen">
+          <div class="success-icon">✓</div>
+          <h2>You're in! Welcome to the club.</h2>
+          <p>Your request has been sent. The organiser will confirm your spot shortly. You'll receive a notification once you're approved.</p>
+          <div class="success-buttons">
+            <button class="btn btn-outline" onclick="resetAll()">Browse More Clubs</button>
+            <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CREATE FLOW -->
+  <div id="createFlow" style="display:none;">
+
+    <div class="step-page active" id="create-step1">
+      <h1 class="section-heading">Create a Book Club</h1>
+      <p class="section-sub">Set up the basics — you can edit details any time after creating.</p>
+      <div class="card card-orange">
+        <h2>Club Information</h2>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="newClubName">Club Name <span class="required">*</span></label>
+            <input type="text" id="newClubName" placeholder="e.g. Saturday Night Readers"/>
+          </div>
+          <div class="form-group full">
+            <label for="newClubDesc">Short Description <span class="required">*</span></label>
+            <textarea id="newClubDesc" placeholder="What's your club about? What kinds of books will you read?"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Genre Focus <span class="required">*</span></label>
+            <div class="genre-pills">
+              <span class="genre-pill" onclick="togglePill(this)">Fiction</span>
+              <span class="genre-pill" onclick="togglePill(this)">Non-Fiction</span>
+              <span class="genre-pill" onclick="togglePill(this)">Sci-Fi</span>
+              <span class="genre-pill" onclick="togglePill(this)">History</span>
+              <span class="genre-pill" onclick="togglePill(this)">Mystery</span>
+              <span class="genre-pill" onclick="togglePill(this)">Fantasy</span>
+              <span class="genre-pill" onclick="togglePill(this)">Biography</span>
+              <span class="genre-pill" onclick="togglePill(this)">Mixed</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newClubMax">Max Members</label>
+            <input type="number" id="newClubMax" min="2" max="100" placeholder="e.g. 20"/>
+            <span class="hint">Leave blank for unlimited</span>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="goCreateStep(2)">Next: Meeting Details →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-page" id="create-step2">
+      <button class="back-link" onclick="goCreateStep(1)">← Back</button>
+      <h1 class="section-heading">Meeting Preferences</h1>
+      <p class="section-sub">Let potential members know how your club runs.</p>
+      <div class="card card-blue">
+        <h2>Meeting Details</h2>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Meeting Frequency</label>
+            <div class="frequency-options">
+              <button class="freq-btn" onclick="selectFreq(this)">Weekly</button>
+              <button class="freq-btn" onclick="selectFreq(this)">Fortnightly</button>
+              <button class="freq-btn selected" onclick="selectFreq(this)">Monthly</button>
+              <button class="freq-btn" onclick="selectFreq(this)">Flexible</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="meetFormat">Meeting Format</label>
+            <select id="meetFormat">
+              <option>In-person (library / café)</option>
+              <option>Online (video call)</option>
+              <option>Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="meetLocation">Preferred Location / Platform</label>
+            <input type="text" id="meetLocation" placeholder="e.g. City Library, or Zoom"/>
+          </div>
+          <div class="form-group full">
+            <label>Club Visibility</label>
+            <div class="privacy-options">
+              <div class="privacy-card selected" onclick="selectPrivacy(this)">
+                <h4>🌐 Public</h4>
+                <p>Anyone can find and request to join</p>
+              </div>
+              <div class="privacy-card" onclick="selectPrivacy(this)">
+                <h4>🔒 Private</h4>
+                <p>Invite-only, won't appear in search</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="goCreateStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goCreateStep(3)">Review & Create →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-page" id="create-step3">
+      <button class="back-link" onclick="goCreateStep(2)">← Back</button>
+      <h1 class="section-heading">Review Your Club</h1>
+      <p class="section-sub">Looks good? Hit create and you're ready to go.</p>
+      <div class="card card-orange">
+        <h2>Summary</h2>
+        <div class="confirm-summary">
+          <div class="confirm-row"><span>Club Name</span><span id="summName">—</span></div>
+          <div class="confirm-row"><span>Visibility</span><span id="summVisibility">Public</span></div>
+          <div class="confirm-row"><span>Frequency</span><span id="summFreq">Monthly</span></div>
+          <div class="confirm-row"><span>Format</span><span id="summFormat">In-person</span></div>
+          <div class="confirm-row"><span>Max Members</span><span id="summMax">Unlimited</span></div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--text-muted);">You'll be set as the organiser. You can edit all settings after creating.</p>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="goCreateStep(2)">← Back</button>
+          <button class="btn btn-primary" onclick="goCreateStep(4)">✓ Create Club</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-page" id="create-step4">
+      <div class="card">
+        <div class="success-screen">
+          <div class="success-icon">🎉</div>
+          <h2>Your club is live!</h2>
+          <p>Members can now discover and request to join <strong id="newClubNameDisplay">your club</strong>. Share the link to get the word out.</p>
+          <div class="success-buttons">
+            <button class="btn btn-outline" onclick="resetAll()">Back to Clubs</button>
+            <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+    // PB6: Persistent Accessibility Logic
+    window.addEventListener('DOMContentLoaded', () => {
+        // Check if high contrast was enabled on a previous page
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
+    });
+
+    function toggleContrast() {
+        // Toggle the class on the current page
+        const isActive = document.body.classList.toggle('high-contrast');
+        // Save the preference so the next page knows to apply it
+        localStorage.setItem('highContrast', isActive);
+    }
+
+    // PB6: Persistent Accessibility Logic
+    window.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
+    });
+
+    function toggleContrast() {
+        const isActive = document.body.classList.toggle('high-contrast');
+        localStorage.setItem('highContrast', isActive);
+    }
+
+    // PB7: Personalized Welcome and Data Check
+    window.onload = function() {
+        const savedName = localStorage.getItem('readerName');
+        if (savedName) {
+            // You can update a header here if one exists
+            console.log("Welcome back, " + savedName);
+        }
+    };
+     
+  const clubs = [
+    { id:1, name:"Downtown Fiction Readers", genre:"Fiction",     emoji:"📖", members:12, maxMembers:20, frequency:"Monthly",     format:"In-person", open:true,  tags:['fiction','open'] },
+    { id:2, name:"Science & Society",        genre:"Non-Fiction", emoji:"🔬", members:8,  maxMembers:15, frequency:"Fortnightly", format:"Online",    open:true,  tags:['nonfiction','open'] },
+    { id:3, name:"Galaxy Bookworms",          genre:"Sci-Fi",      emoji:"🚀", members:18, maxMembers:20, frequency:"Monthly",     format:"Hybrid",    open:false, tags:['scifi'] },
+    { id:4, name:"Regional History Buffs",    genre:"History",     emoji:"🏛️", members:10, maxMembers:25, frequency:"Monthly",     format:"In-person", open:true,  tags:['history','open'] },
+    { id:5, name:"Mystery Book Club",         genre:"Mystery",     emoji:"🔍", members:14, maxMembers:20, frequency:"Weekly",      format:"Online",    open:true,  tags:['fiction','open'] },
+    { id:6, name:"Page Turners",              genre:"Mixed",       emoji:"📚", members:6,  maxMembers:30, frequency:"Flexible",    format:"In-person", open:true,  tags:['open'] },
+  ];
+
+  function renderClubs(filter) {
+    const grid = document.getElementById('clubsGrid');
+    const list = filter === 'all' ? clubs : clubs.filter(c => c.tags.includes(filter));
+    grid.innerHTML = list.map(c => `
+      <div class="club-card" onclick="selectClub(${c.id})">
+        <div class="club-card-img">${c.emoji}</div>
+        <div class="club-card-body">
+          <div class="club-card-genre">${c.genre}</div>
+          <div class="club-card-name">${c.name}</div>
+          <div class="club-card-meta">
+            <span>👥 ${c.members}/${c.maxMembers}</span>
+            <span>📅 ${c.frequency}</span>
+          </div>
+        </div>
+        <button class="club-card-btn${c.open ? '' : ' full'}" ${c.open ? '' : 'disabled'}>
+          ${c.open ? 'View & Join →' : 'Club Full'}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function filterClubs(btn, filter) {
+    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderClubs(filter);
+  }
+
+  function selectClub(id) {
+    const c = clubs.find(x => x.id === id);
+    if (!c.open) return;
+    document.getElementById('detailEmoji').textContent = c.emoji;
+    document.getElementById('detailClubName').textContent = c.name;
+    document.getElementById('detailGenre').textContent = c.genre;
+    document.getElementById('clubDetailSummary').innerHTML = `
+      <div class="confirm-row"><span>Members</span><span>${c.members} / ${c.maxMembers}</span></div>
+      <div class="confirm-row"><span>Meets</span><span>${c.frequency}</span></div>
+      <div class="confirm-row"><span>Format</span><span>${c.format}</span></div>
+      <div class="confirm-row"><span>Status</span><span style="color:var(--success-green)">✓ Open to Join</span></div>
+    `;
+    goJoinStep(2);
+  }
+
+  function goJoinStep(n) {
+    document.querySelectorAll('#joinFlow .step-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('join-step' + n).classList.add('active');
+    updateStepBar(n);
+  }
+
+  function goCreateStep(n) {
+    document.querySelectorAll('#createFlow .step-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('create-step' + n).classList.add('active');
+    if (n === 3) {
+      const name = document.getElementById('newClubName').value || 'Unnamed Club';
+      const max  = document.getElementById('newClubMax').value;
+      const freq = document.querySelector('.freq-btn.selected')?.textContent || 'Monthly';
+      const fmt  = document.getElementById('meetFormat').value;
+      const vis  = document.querySelector('.privacy-card.selected h4')?.textContent || 'Public';
+      document.getElementById('summName').textContent       = name;
+      document.getElementById('summMax').textContent        = max || 'Unlimited';
+      document.getElementById('summFreq').textContent       = freq;
+      document.getElementById('summFormat').textContent     = fmt;
+      document.getElementById('summVisibility').textContent = vis.replace(/^.\s/, '');
+    }
+    if (n === 4) {
+      document.getElementById('newClubNameDisplay').textContent =
+        document.getElementById('newClubName').value || 'your club';
+    }
+    updateStepBar(n > 3 ? 3 : n);
+  }
+
+  function updateStepBar(active) {
+    [1,2,3].forEach(i => {
+      const el = document.getElementById('stepInd' + i);
+      el.classList.remove('active','done');
+      if (i < active)   { el.classList.add('done');   el.querySelector('.step-circle').textContent = '✓'; }
+      if (i === active) { el.classList.add('active'); el.querySelector('.step-circle').textContent = i; }
+      if (i > active)   { el.querySelector('.step-circle').textContent = i; }
+    });
+  }
+
+  function setMode(mode, e) {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('joinFlow').style.display   = mode === 'join'   ? 'block' : 'none';
+    document.getElementById('createFlow').style.display = mode === 'create' ? 'block' : 'none';
+    updateStepBar(1);
+  }
+
+  function resetAll() {
+    document.querySelectorAll('#joinFlow .step-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('join-step1').classList.add('active');
+    document.querySelectorAll('#createFlow .step-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('create-step1').classList.add('active');
+    document.getElementById('joinFlow').style.display   = 'block';
+    document.getElementById('createFlow').style.display = 'none';
+    document.querySelectorAll('.mode-btn')[0].classList.add('active');
+    document.querySelectorAll('.mode-btn')[1].classList.remove('active');
+    updateStepBar(1);
+  }
+
+  function togglePill(el)    { el.classList.toggle('selected'); }
+  function selectPrivacy(el) { document.querySelectorAll('.privacy-card').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); }
+  function selectFreq(el)    { document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('selected')); el.classList.add('selected'); }
+
+  renderClubs('all');
+</script>
+</body>
+</html>
