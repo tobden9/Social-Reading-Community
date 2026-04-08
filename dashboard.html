@@ -1,128 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Dashboard - Social Reading Community</title>
-    <style>
-        :root {
-            --civic-blue-dark: #1a365d;
-            --civic-blue-light: #3b66bc;
-            --warm-bg: #f4f1ea;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --accent-orange: #e25822;
-            --success-green: #2e7d32;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Library Dashboard - Social Reading Community</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--warm-bg);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-        }
+<style>
+:root {
+    --civic-blue-dark: #1a365d;
+    --civic-blue-light: #3b66bc;
+    --warm-bg: #f4f1ea;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --accent-orange: #e25822;
+}
 
-        /* --- Navigation & Layout --- */
-        header {
-            background-color: var(--civic-blue-dark);
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .logo-area { display: flex; align-items: center; gap: 15px; font-weight: bold; font-size: 1.2rem; }
-        .logo-circle { background-color: var(--accent-orange); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; }
-        nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
-        .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 800px) { .dashboard-container { grid-template-columns: 2fr 1fr; } }
+/* Accessibility: Font Scaling */
+:root { --base-font-size: 16px; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--warm-bg); color: var(--text-main); margin:0; font-size: var(--base-font-size); }
+.font-small { --base-font-size: 14px; }
+.font-medium { --base-font-size: 16px; }
+.font-large { --base-font-size: 18px; }
 
-        /* --- Cards --- */
-        .card { background-color: var(--card-bg); border-radius: 10px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid transparent; }
-        .card h2 { margin-top: 0; font-size: 1.3rem; color: var(--civic-blue-dark); border-bottom: 2px solid var(--warm-bg); padding-bottom: 10px; margin-bottom: 20px; }
-        .btn { display: inline-block; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; margin-top: 15px; }
-        .btn-primary { background-color: var(--civic-blue-light); color: white; }
+/* Layout */
+header { background: var(--civic-blue-dark); color:white; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; }
+.logo-area { display:flex; align-items:center; gap:15px; font-weight:bold; }
+.logo-circle { background: var(--accent-orange); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; }
+nav a { color:white; text-decoration:none; margin-left:20px; }
 
-        /* --- PB7: Onboarding Modal --- */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.85); display: none; 
-            justify-content: center; align-items: center; z-index: 9999; 
-        }
-        .modal-content { 
-            background: var(--card-bg); padding: 30px; border-radius: 12px; 
-            max-width: 500px; width: 90%; text-align: center; border-top: 6px solid var(--accent-orange); 
-        }
-        .onboarding-step { display: none; }
-        .onboarding-step.active { display: block !important; }
-        .genre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .genre-chip { padding: 10px; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; }
-        .genre-chip.selected { background-color: var(--civic-blue-light); color: white; }
+.dashboard-container { max-width:1200px; margin:30px auto; padding:0 20px; display:grid; grid-template-columns:2fr 1fr; gap:20px; }
+.card { background:var(--card-bg); padding:25px; border-radius:10px; box-shadow:0 4px 6px rgba(0,0,0,0.05); border-top:4px solid var(--civic-blue-light); }
 
-        /* PB6: High Contrast Mode */
-        body.high-contrast {
-            --warm-bg: #000000;
-            --card-bg: #000000;
-            --text-main: #FFFFFF;
-            --text-muted: #FFFF00;
-            --civic-blue-dark: #00FF00;
-            --civic-blue-light: #00FFFF;
-            --accent-orange: #FFFFFF;
-        }
-        body.high-contrast .logo-circle {
-            background-color: #000000 !important;
-            color: #00FF00 !important;
-            border: 2px solid #00FF00 !important;
-        }
-        body.high-contrast .card { border: 2px solid #00FF00 !important; }
-        body.high-contrast .btn-primary { background-color: #00FF00 !important; color: #000000 !important; border: 2px solid #FFFFFF !important; }
+/* Accessibility Controls */
+.accessibility-controls {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    display: flex;
+    gap: 5px;
+    z-index: 1000;
+}
+.accessibility-controls button {
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--civic-blue-dark);
+    color: white;
+    cursor: pointer;
+}
 
-        .contrast-toggle {
-            position: fixed; bottom: 20px; right: 20px; padding: 10px 15px;
-            background: var(--civic-blue-dark); color: white;
-            border-radius: 50px; cursor: pointer; border: 2px solid white;
-            z-index: 9999; display: flex; align-items: center; gap: 5px; font-weight: bold;
-        }
-    </style>
+/* High Contrast Mode */
+body.high-contrast {
+    --warm-bg: #000;
+    --card-bg: #000;
+    --text-main: #fff;
+    --text-muted: #ffff00;
+    --civic-blue-dark: #00ff00;
+    --civic-blue-light: #00ffff;
+}
+.contrast-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background: var(--civic-blue-dark);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 2px solid white;
+    z-index: 1000;
+}
+
+/* Recommendation Cards */
+.book-card {
+    background: var(--card-bg);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+</style>
 </head>
+
 <body>
 
-<div id="onboardingModal" class="modal-overlay">
-    <div class="modal-content">
-        <div id="step1" class="onboarding-step active">
-            <h2>Welcome!</h2>
-            <p>What is your name?</p>
-            <input type="text" id="userNameInput" placeholder="Name..." style="width: 80%; padding: 12px; margin-bottom: 20px;">
-            <br>
-            <button class="btn btn-primary" onclick="nextStep(2)">Next: Interests</button>
-        </div>
-        <div id="step2" class="onboarding-step">
-            <h2>Your Interests</h2>
-            <div class="genre-grid">
-                <div class="genre-chip" onclick="this.classList.toggle('selected')">Fantasy</div>
-                <div class="genre-chip" onclick="this.classList.toggle('selected')">History</div>
-                <div class="genre-chip" onclick="this.classList.toggle('selected')">Sci-Fi</div>
-                <div class="genre-chip" onclick="this.classList.toggle('selected')">Mystery</div>
-            </div>
-            <button class="btn btn-primary" onclick="nextStep(3)">Next: Goal</button>
-        </div>
-        <div id="step3" class="onboarding-step">
-            <h2>Annual Reading Goal</h2>
-            <input type="range" min="1" max="50" value="10" id="goalRange" oninput="this.nextElementSibling.value = this.value">
-            <output>10</output> Books
-            <br><br>
-            <button class="btn btn-primary" onclick="finishOnboarding()">Finish</button>
-        </div>
-    </div>
-</div>
-
 <header>
-  <div class="logo-area"><div class="logo-circle">CITY</div><span>Social Reading Community</span></div>
-  <nav>
+  <div class="logo-area">
+    <div class="logo-circle">CITY</div>
+    <span>Social Reading Community</span>
+  </div>
+  <nav aria-label="Main Navigation">
     <a href="dashboard.html">Dashboard</a>
     <a href="BookClubFlow.html">Book Clubs</a>
     <a href="BookCategorization.html">Discover</a>
@@ -130,75 +98,86 @@
   </nav>
 </header>
 
-<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+<!-- Accessibility Controls -->
+<div class="accessibility-controls">
+  <button onclick="setFontSize('small')" aria-label="Decrease font size">A-</button>
+  <button onclick="setFontSize('medium')" aria-label="Default font size">A</button>
+  <button onclick="setFontSize('large')" aria-label="Increase font size">A+</button>
+</div>
+
+<button class="contrast-toggle" onclick="toggleContrast()" aria-label="Toggle high contrast mode">🌓 Contrast</button>
 
 <div class="dashboard-container">
     <main>
-        <h1 id="welcomeHeader">Welcome back, Alex!</h1>
+        <h1 id="welcomeHeader">Welcome back!</h1>
+
         <section class="card">
-            <h2>Currently Reading</h2>
-            <p>The Dictionary of Lost Words - 65% Complete</p>
+            <h2>Recommended for You</h2>
+            <div id="recommendations" aria-live="polite"></div>
         </section>
     </main>
+
     <aside>
         <section class="card">
-            <h2>Milestones</h2>
-            <span id="goalText">Set your goal in onboarding!</span>
+            <h2>Reading Goal</h2>
+            <p id="goalText">Set during onboarding</p>
         </section>
     </aside>
 </div>
 
 <script>
-    window.onload = function() {
-        // PB6: Check High Contrast (Still use localStorage so theme stays forever)
-        if (localStorage.getItem('highContrast') === 'true') {
-            document.body.classList.add('high-contrast');
-        }
+/* Accessibility Functions */
+function toggleContrast() {
+    document.body.classList.toggle('high-contrast');
+    localStorage.setItem('highContrast', document.body.classList.contains('high-contrast'));
+}
+function setFontSize(size) {
+    document.body.classList.remove('font-small','font-medium','font-large');
+    document.body.classList.add(`font-${size}`);
+    localStorage.setItem('fontSize', size);
+}
 
-        // PB7: SESSION-BASED ONBOARDING
-        // We use sessionStorage so it resets when the browser/tab is closed
-        const hasCompletedSession = sessionStorage.getItem('onboardingComplete');
-        const modal = document.getElementById('onboardingModal');
+/* Restore Preferences */
+window.onload = function() {
+    if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
+    const fontSize = localStorage.getItem('fontSize') || 'medium';
+    setFontSize(fontSize);
 
-        if (!hasCompletedSession) {
-            modal.style.display = 'flex'; 
-        } else {
-            // Update UI with session data while navigating between pages
-            const savedName = sessionStorage.getItem('readerName');
-            const savedGoal = sessionStorage.getItem('readingGoal');
-            
-            if (savedName) document.getElementById('welcomeHeader').innerText = `Welcome back, ${savedName}!`;
-            if (savedGoal) document.getElementById('goalText').innerText = `Goal: Read ${savedGoal} books!`;
-        }
-    };
+    const name = localStorage.getItem('userName') || 'Reader';
+    const goal = localStorage.getItem('readingGoal') || '10';
+    document.getElementById('welcomeHeader').textContent = `Welcome back, ${name}!`;
+    document.getElementById('goalText').textContent = `Your goal: ${goal} books this year`;
 
-    function nextStep(step) {
-        document.querySelectorAll('.onboarding-step').forEach(s => {
-            s.style.display = 'none';
-            s.classList.remove('active');
-        });
-        document.getElementById('step' + step).style.display = 'block';
-        document.getElementById('step' + step).classList.add('active');
+    renderRecommendations();
+};
+
+/* PB7: Recommendation Engine */
+const bookData = [
+    { title: "Dune", author: "Frank Herbert", genre: "Sci-Fi" },
+    { title: "Sapiens", author: "Yuval Noah Harari", genre: "History" },
+    { title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy" },
+    { title: "Gone Girl", author: "Gillian Flynn", genre: "Mystery" }
+];
+
+function renderRecommendations() {
+    const preferences = JSON.parse(localStorage.getItem('userGenres')) || [];
+    const container = document.getElementById('recommendations');
+
+    const recommendations = bookData.filter(book => preferences.includes(book.genre));
+
+    if (recommendations.length === 0) {
+        container.innerHTML = "<p>No recommendations yet. Update your interests!</p>";
+        return;
     }
 
-    function finishOnboarding() {
-        const name = document.getElementById('userNameInput').value || "Alex";
-        const goal = document.getElementById('goalRange').value;
-        
-        // SAVE TO SESSION ONLY
-        sessionStorage.setItem('onboardingComplete', 'true');
-        sessionStorage.setItem('readerName', name);
-        sessionStorage.setItem('readingGoal', goal);
-        
-        document.getElementById('welcomeHeader').innerText = `Welcome back, ${name}!`;
-        document.getElementById('goalText').innerText = `Goal: Read ${goal} books!`;
-        document.getElementById('onboardingModal').style.display = 'none';
-    }
-
-    function toggleContrast() {
-        const active = document.body.classList.toggle('high-contrast');
-        localStorage.setItem('highContrast', active);
-    }
+    container.innerHTML = recommendations.map(book => `
+        <div class="book-card">
+            <strong>${book.title}</strong><br>
+            <span>${book.author}</span>
+        </div>
+    `).join('');
+}
 </script>
+
 </body>
 </html>
