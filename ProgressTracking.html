@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Tracking - Social Reading Community</title>
+    <style>
+        :root {
+            --civic-blue-dark: #1a365d;
+            --civic-blue-light: #3b66bc;
+            --warm-bg: #f4f1ea;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-orange: #e25822;
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--warm-bg);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+        }
+
+        header {
+            background-color: var(--civic-blue-dark);
+            color: white; padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo-area { display: flex; align-items: center; gap: 15px; font-weight: bold; font-size: 1.2rem; }
+        .logo-circle { background-color: var(--accent-orange); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
+
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .page-title { font-size: 1.6rem; color: var(--civic-blue-dark); margin-bottom: 6px; }
+        .page-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
+
+        .card {
+            background-color: var(--card-bg); border-radius: 10px;
+            padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 24px; border-top: 4px solid transparent;
+        }
+        .card h2 { margin-top: 0; font-size: 1.2rem; color: var(--civic-blue-dark); border-bottom: 2px solid var(--warm-bg); padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* Book progress cards */
+        .books-card { border-top-color: var(--civic-blue-light); }
+        .book-item { border: 1px solid #e8e8e8; border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+        .book-item:last-child { margin-bottom: 0; }
+        .book-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .book-title { font-weight: bold; font-size: 1rem; color: var(--civic-blue-dark); }
+        .book-author { font-size: 0.85rem; color: var(--text-muted); }
+        .book-club-tag { background: #e8f0fe; color: var(--civic-blue-light); font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: bold; }
+
+        .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .progress-bar-wrap { flex: 1; background: #e0e0e0; border-radius: 20px; height: 14px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--civic-blue-light), var(--accent-orange)); transition: width 0.8s ease; }
+        .progress-pct { font-weight: bold; font-size: 0.9rem; color: var(--civic-blue-dark); min-width: 36px; text-align: right; }
+
+        .book-meta { display: flex; gap: 20px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap; }
+
+        /* Update progress */
+        .update-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--warm-bg); flex-wrap: wrap; }
+        .update-row label { font-size: 0.85rem; color: var(--text-muted); }
+        .update-row input[type="range"] { flex: 1; min-width: 120px; accent-color: var(--civic-blue-light); }
+        .update-row .range-val { font-weight: bold; font-size: 0.85rem; min-width: 28px; }
+        .btn { padding: 7px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 0.85rem; }
+        .btn-primary { background-color: var(--civic-blue-light); color: white; }
+        .btn-primary:hover { background-color: var(--civic-blue-dark); }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: var(--success-green); color: white; padding: 12px 24px;
+            border-radius: 30px; font-size: 0.9rem; font-weight: bold;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 9999; pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Reminders */
+        .reminders-card { border-top-color: var(--accent-orange); }
+        .reminder-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--warm-bg); flex-wrap: wrap; gap: 8px; }
+        .reminder-item:last-child { border-bottom: none; }
+        .reminder-info .club-name { font-weight: bold; font-size: 0.95rem; }
+        .reminder-info .meeting-date { font-size: 0.8rem; color: var(--text-muted); }
+        .days-left { font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 20px; }
+        .days-left.urgent { background: #fdecea; color: #c62828; }
+        .days-left.soon { background: #fff8e1; color: #f57f17; }
+        .days-left.ok { background: #e8f5e9; color: var(--success-green); }
+
+        .contrast-toggle {
+            position: fixed; bottom: 20px; right: 20px; padding: 10px 15px;
+            background: var(--civic-blue-dark); color: white;
+            border-radius: 50px; cursor: pointer; border: 2px solid white;
+            z-index: 9999; display: flex; align-items: center; gap: 5px; font-weight: bold;
+        }
+
+        body.high-contrast {
+            --warm-bg: #000000; --card-bg: #000000; --text-main: #FFFFFF;
+            --text-muted: #FFFF00; --civic-blue-dark: #00FF00;
+            --civic-blue-light: #00FFFF; --accent-orange: #FFFFFF;
+        }
+        body.high-contrast .card { border: 2px solid #00FF00 !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <div class="logo-circle">CITY</div>
+        <span>Social Reading Community</span>
+    </div>
+    <nav>
+        <a href="../dashboard.html">Dashboard</a>
+        <a href="../BookClubFlow.html">Book Clubs</a>
+        <a href="../BookCategorization.html">Discover</a>
+        <a href="Gamification.html">Badges</a>
+        <a href="../index.html" onclick="localStorage.clear()">Logout</a>
+    </nav>
+</header>
+
+<div class="toast" id="toast">Progress updated!</div>
+<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+
+<div class="container">
+    <h1 class="page-title">Reading Progress</h1>
+    <p class="page-subtitle">Update your progress and stay on track before your next club meeting.</p>
+
+    <!-- Currently Reading -->
+    <div class="card books-card">
+        <h2>Currently Reading</h2>
+        <div id="bookList"></div>
+    </div>
+
+    <!-- Club Meeting Reminders -->
+    <div class="card reminders-card">
+        <h2>Upcoming Club Meetings</h2>
+        <div id="reminderList"></div>
+    </div>
+</div>
+
+<script src="../sprint4_data.js"></script>
+<script>
+    window.onload = function() {
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
+
+        // Render books
+        const bookList = document.getElementById('bookList');
+        currentBooks.forEach(book => {
+            const saved = localStorage.getItem('progress_' + book.id);
+            const progress = saved !== null ? parseInt(saved) : book.progress;
+            const pagesRead = Math.round((progress / 100) * book.totalPages);
+
+            bookList.innerHTML += `
+                <div class="book-item" id="bookItem_${book.id}">
+                    <div class="book-header">
+                        <div>
+                            <div class="book-title">${book.title}</div>
+                            <div class="book-author">${book.author} &middot; ${book.genre}</div>
+                        </div>
+                        <span class="book-club-tag">${book.club}</span>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-bar-wrap">
+                            <div class="progress-bar-fill" id="bar_${book.id}" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="progress-pct" id="pct_${book.id}">${progress}%</div>
+                    </div>
+                    <div class="book-meta">
+                        <span id="pages_${book.id}">${pagesRead} / ${book.totalPages} pages</span>
+                        <span>Meeting: ${book.meetingDate}</span>
+                    </div>
+                    <div class="update-row">
+                        <label>Update progress:</label>
+                        <input type="range" min="0" max="100" value="${progress}" id="slider_${book.id}"
+                            oninput="liveUpdate('${book.id}', this.value, ${book.totalPages})">
+                        <span class="range-val" id="sliderVal_${book.id}">${progress}%</span>
+                        <button class="btn btn-primary" onclick="saveProgress('${book.id}', ${book.totalPages})">Save</button>
+                    </div>
+                </div>`;
+        });
+
+        // Render reminders
+        const reminderList = document.getElementById('reminderList');
+        const today = new Date();
+        currentBooks.forEach(book => {
+            const meeting = new Date(book.meetingDate);
+            const diff = Math.ceil((meeting - today) / (1000 * 60 * 60 * 24));
+            const urgency = diff <= 3 ? 'urgent' : diff <= 7 ? 'soon' : 'ok';
+            const label = diff <= 0 ? 'Today!' : diff === 1 ? '1 day left' : `${diff} days left`;
+
+            reminderList.innerHTML += `
+                <div class="reminder-item">
+                    <div class="reminder-info">
+                        <div class="club-name">${book.club}</div>
+                        <div class="meeting-date">Meeting on ${book.meetingDate} &middot; Currently reading: ${book.title}</div>
+                    </div>
+                    <span class="days-left ${urgency}">${label}</span>
+                </div>`;
+        });
+    };
+
+    function liveUpdate(id, val, totalPages) {
+        document.getElementById('sliderVal_' + id).textContent = val + '%';
+        document.getElementById('pct_' + id).textContent = val + '%';
+        document.getElementById('bar_' + id).style.width = val + '%';
+        const pages = Math.round((val / 100) * totalPages);
+        document.getElementById('pages_' + id).textContent = `${pages} / ${totalPages} pages`;
+    }
+
+    function saveProgress(id, totalPages) {
+        const val = document.getElementById('slider_' + id).value;
+        localStorage.setItem('progress_' + id, val);
+        showToast('Progress saved!');
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function toggleContrast() {
+        const active = document.body.classList.toggle('high-contrast');
+        localStorage.setItem('highContrast', active);
+    }
+</script>
+</body>
+</html>

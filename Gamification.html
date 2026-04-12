@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badges & Milestones - Social Reading Community</title>
+    <style>
+        :root {
+            --civic-blue-dark: #1a365d;
+            --civic-blue-light: #3b66bc;
+            --warm-bg: #f4f1ea;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --accent-orange: #e25822;
+            --success-green: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--warm-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--civic-blue-dark);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; font-weight: bold; font-size: 1.2rem; }
+        .logo-circle { background-color: var(--accent-orange); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.95rem; }
+
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+        .page-title { font-size: 1.6rem; color: var(--civic-blue-dark); margin-bottom: 6px; }
+        .page-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+            border-top: 4px solid transparent;
+        }
+
+        .card h2 { margin-top: 0; font-size: 1.2rem; color: var(--civic-blue-dark); border-bottom: 2px solid var(--warm-bg); padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* Annual Goal Progress */
+        .goal-card { border-top-color: var(--accent-orange); }
+        .goal-stats { display: flex; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
+        .goal-stat { text-align: center; }
+        .goal-stat .number { font-size: 2rem; font-weight: bold; color: var(--civic-blue-dark); }
+        .goal-stat .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+
+        .progress-bar-wrap { background: #e0e0e0; border-radius: 20px; height: 18px; width: 100%; overflow: hidden; margin-bottom: 10px; }
+        .progress-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--civic-blue-light), var(--accent-orange)); transition: width 0.8s ease; }
+
+        .milestone-markers { display: flex; justify-content: space-between; margin-top: 12px; }
+        .milestone { text-align: center; font-size: 0.75rem; }
+        .milestone .dot { width: 12px; height: 12px; border-radius: 50%; margin: 0 auto 4px; }
+        .milestone .dot.reached { background: var(--success-green); }
+        .milestone .dot.pending { background: #ccc; }
+        .milestone .mlabel { color: var(--text-muted); }
+        .milestone .mlabel.reached { color: var(--success-green); font-weight: bold; }
+
+        /* Badges */
+        .badges-card { border-top-color: var(--civic-blue-light); }
+        .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+        .badge-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 18px 12px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .badge-item.earned {
+            border-color: var(--civic-blue-light);
+            background: #f0f4ff;
+        }
+        .badge-item.locked {
+            opacity: 0.45;
+            filter: grayscale(1);
+        }
+        .badge-item:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
+        .badge-icon { font-size: 2rem; margin-bottom: 8px; }
+        .badge-name { font-weight: bold; font-size: 0.85rem; color: var(--civic-blue-dark); margin-bottom: 4px; }
+        .badge-desc { font-size: 0.75rem; color: var(--text-muted); }
+        .badge-status { font-size: 0.7rem; margin-top: 8px; font-weight: bold; }
+        .badge-status.earned { color: var(--success-green); }
+        .badge-status.locked { color: #aaa; }
+
+        /* Streak */
+        .streak-card { border-top-color: var(--success-green); }
+        .streak-display { display: flex; align-items: center; gap: 16px; }
+        .streak-number { font-size: 3rem; font-weight: bold; color: var(--accent-orange); }
+        .streak-text { font-size: 0.95rem; color: var(--text-muted); }
+
+        /* Recent Activity */
+        .activity-card { border-top-color: #ccc; }
+        .activity-list { list-style: none; padding: 0; margin: 0; }
+        .activity-list li { padding: 10px 0; border-bottom: 1px solid var(--warm-bg); font-size: 0.9rem; display: flex; gap: 12px; }
+        .activity-list li:last-child { border-bottom: none; }
+        .activity-date { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; }
+
+        .contrast-toggle {
+            position: fixed; bottom: 20px; right: 20px; padding: 10px 15px;
+            background: var(--civic-blue-dark); color: white;
+            border-radius: 50px; cursor: pointer; border: 2px solid white;
+            z-index: 9999; display: flex; align-items: center; gap: 5px; font-weight: bold;
+        }
+
+        body.high-contrast {
+            --warm-bg: #000000; --card-bg: #000000; --text-main: #FFFFFF;
+            --text-muted: #FFFF00; --civic-blue-dark: #00FF00;
+            --civic-blue-light: #00FFFF; --accent-orange: #FFFFFF;
+        }
+        body.high-contrast .card { border: 2px solid #00FF00 !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <div class="logo-circle">CITY</div>
+        <span>Social Reading Community</span>
+    </div>
+    <nav>
+        <a href="../dashboard.html">Dashboard</a>
+        <a href="../BookClubFlow.html">Book Clubs</a>
+        <a href="../BookCategorization.html">Discover</a>
+        <a href="../ProgressTracking.html">Progress</a>
+        <a href="../index.html" onclick="localStorage.clear()">Logout</a>
+    </nav>
+</header>
+
+<button class="contrast-toggle" onclick="toggleContrast()">🌓 Contrast</button>
+
+<div class="container">
+    <h1 class="page-title">Badges & Milestones</h1>
+    <p class="page-subtitle">Track your reading achievements and celebrate your progress.</p>
+
+    <!-- Annual Goal -->
+    <div class="card goal-card">
+        <h2>Annual Reading Goal</h2>
+        <div class="goal-stats">
+            <div class="goal-stat">
+                <div class="number" id="booksRead">—</div>
+                <div class="label">Books Read</div>
+            </div>
+            <div class="goal-stat">
+                <div class="number" id="booksGoal">—</div>
+                <div class="label">Goal</div>
+            </div>
+            <div class="goal-stat">
+                <div class="number" id="booksLeft">—</div>
+                <div class="label">Remaining</div>
+            </div>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="goalBar" style="width: 0%"></div>
+        </div>
+        <div class="milestone-markers" id="milestoneMarkers"></div>
+    </div>
+
+    <!-- Badges -->
+    <div class="card badges-card">
+        <h2>Your Badges</h2>
+        <div class="badge-grid" id="badgeGrid"></div>
+    </div>
+
+    <!-- Streak -->
+    <div class="card streak-card">
+        <h2>Reading Streak</h2>
+        <div class="streak-display">
+            <div class="streak-number" id="streakNumber">—</div>
+            <div class="streak-text">
+                <strong>days in a row!</strong><br>
+                Keep it up — don't break the chain.
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card activity-card">
+        <h2>Recent Activity</h2>
+        <ul class="activity-list" id="activityList"></ul>
+    </div>
+</div>
+
+<script src="../sprint4_data.js"></script>
+<script>
+    window.onload = function() {
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
+
+        // Goal
+        const pct = Math.round((userData.booksRead / userData.readingGoal) * 100);
+        document.getElementById('booksRead').textContent = userData.booksRead;
+        document.getElementById('booksGoal').textContent = userData.readingGoal;
+        document.getElementById('booksLeft').textContent = userData.readingGoal - userData.booksRead;
+        setTimeout(() => {
+            document.getElementById('goalBar').style.width = pct + '%';
+        }, 100);
+
+        // Milestones
+        const markersEl = document.getElementById('milestoneMarkers');
+        milestones.forEach(m => {
+            markersEl.innerHTML += `
+                <div class="milestone">
+                    <div class="dot ${m.reached ? 'reached' : 'pending'}"></div>
+                    <div class="mlabel ${m.reached ? 'reached' : ''}">${m.percent}%<br>${m.label}</div>
+                </div>`;
+        });
+
+        // Badges
+        const grid = document.getElementById('badgeGrid');
+        badges.forEach(b => {
+            grid.innerHTML += `
+                <div class="badge-item ${b.earned ? 'earned' : 'locked'}">
+                    <div class="badge-icon">${b.icon}</div>
+                    <div class="badge-name">${b.name}</div>
+                    <div class="badge-desc">${b.description}</div>
+                    <div class="badge-status ${b.earned ? 'earned' : 'locked'}">${b.earned ? '✓ Earned' : '🔒 Locked'}</div>
+                </div>`;
+        });
+
+        // Streak
+        document.getElementById('streakNumber').textContent = userData.currentStreak;
+
+        // Activity
+        const actEl = document.getElementById('activityList');
+        recentActivity.forEach(a => {
+            actEl.innerHTML += `
+                <li>
+                    <span class="activity-date">${a.date}</span>
+                    <span>${a.action}</span>
+                </li>`;
+        });
+    };
+
+    function toggleContrast() {
+        const active = document.body.classList.toggle('high-contrast');
+        localStorage.setItem('highContrast', active);
+    }
+</script>
+</body>
+</html>
