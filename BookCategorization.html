@@ -14,6 +14,8 @@
     --text-muted: #666666;
     --accent-orange: #e25822;
     --success-green: #2e7d32;
+    --ai-purple: #6c3fc5;
+    --ai-purple-light: #ede8fb;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -507,6 +509,67 @@
     .books-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
   }
 
+  /* ===== AI SMART SEARCH ===== */
+  .ai-panel {
+    background: linear-gradient(135deg, #1a1060 0%, #2d1a80 50%, #1a365d 100%);
+    border-radius: 14px; padding: 24px 28px; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(108,63,197,0.25);
+  }
+  .ai-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .ai-badge { background: rgba(108,63,197,0.6); border: 1px solid rgba(255,255,255,0.25); color: white; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .ai-panel-title { color: white; font-size: 1.1rem; font-weight: 700; }
+  .ai-panel-sub { color: rgba(255,255,255,0.65); font-size: 0.83rem; margin-bottom: 14px; }
+  .ai-search-row { display: flex; gap: 10px; }
+  .ai-input { flex: 1; padding: 12px 16px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+  .ai-input::placeholder { color: rgba(255,255,255,0.45); }
+  .ai-input:focus { border-color: rgba(255,255,255,0.5); }
+  .ai-search-btn { padding: 12px 20px; background: var(--ai-purple); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: background 0.2s; white-space: nowrap; }
+  .ai-search-btn:hover { background: #5530a8; }
+  .ai-search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .ai-quick-prompts { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .quick-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 0.78rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .quick-chip:hover { background: rgba(255,255,255,0.2); color: white; }
+  .ai-result-area { display: none; margin-top: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 16px 18px; }
+  .ai-result-area.visible { display: block; }
+  .ai-result-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+  .ai-result-text { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.9); }
+  .ai-result-books { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .ai-book-chip { background: rgba(108,63,197,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.8rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: background 0.15s; font-family: inherit; border: none; }
+  .ai-book-chip:hover { background: rgba(108,63,197,0.8); }
+  .typing-dots { display: inline-flex; gap: 4px; align-items: center; }
+  .typing-dots span { width: 6px; height: 6px; background: rgba(255,255,255,0.6); border-radius: 50%; animation: blink 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+  /* AI Recommendations strip */
+  .reco-section { margin-bottom: 28px; }
+  .reco-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .reco-title { display: flex; align-items: center; gap: 9px; font-size: 1rem; font-weight: 700; color: var(--civic-blue-dark); }
+  .reco-dot { width: 8px; height: 8px; background: var(--ai-purple); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .reco-refresh { background: none; border: 1px solid var(--ai-purple); color: var(--ai-purple); font-size: 0.78rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .reco-refresh:hover { background: var(--ai-purple-light); }
+  .reco-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+  .reco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+  .reco-card { background: var(--card-bg); border-radius: 10px; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--ai-purple); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+  .reco-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+  .reco-why { font-size: 0.72rem; color: var(--ai-purple); font-weight: 600; margin-bottom: 6px; }
+  .reco-cover { font-size: 2rem; margin-bottom: 6px; }
+  .reco-book-title { font-size: 0.88rem; font-weight: 700; color: var(--civic-blue-dark); margin-bottom: 2px; }
+  .reco-book-author { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+  .reco-book-genre { font-size: 0.7rem; color: var(--accent-orange); font-weight: 700; text-transform: uppercase; }
+  .reco-skeleton { background: linear-gradient(90deg, #e8e3d8 25%, #f0ece4 50%, #e8e3d8 75%); background-size: 200% 100%; border-radius: 10px; height: 120px; animation: shimmer 1.5s infinite linear; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  .section-divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; color: var(--text-muted); font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: #ddd; }
+
+  /* AI modal insight */
+  .modal-ai-insight { background: var(--ai-purple-light); border-left: 3px solid var(--ai-purple); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.82rem; color: #3d1d8a; line-height: 1.5; }
+  .modal-ai-insight strong { display: block; margin-bottom: 3px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
   /* PB6: High Contrast Mode Colors (AAA Compliant) */
     body.high-contrast {
         --warm-bg: #000000;
@@ -535,6 +598,7 @@
         color: #000000 !important;
         border: 2px solid #FFFFFF !important;
     }
+    body.high-contrast .reco-card { border: 2px solid #FF88FF !important; }
 
     /* Float the Toggle Button */
     .contrast-toggle {
@@ -574,6 +638,48 @@
 
   <h1 class="page-title">Discover Books</h1>
   <p class="page-sub">Browse the community's reading collection by genre, tags, or search.</p>
+
+  <!-- AI SMART SEARCH -->
+  <div class="ai-panel">
+    <div class="ai-panel-header">
+      <span class="ai-badge">✦ AI</span>
+      <span class="ai-panel-title">Smart Search</span>
+    </div>
+    <p class="ai-panel-sub">Describe what you're in the mood for — themes, vibes, or anything specific.</p>
+    <div class="ai-search-row">
+      <input class="ai-input" type="text" id="aiSearchInput"
+        placeholder="e.g. a mystery set in Victorian London, or something like Dune but shorter…"
+        onkeydown="if(event.key==='Enter') doAISearch()" />
+      <button class="ai-search-btn" id="aiSearchBtn" onclick="doAISearch()">✦ Ask AI</button>
+    </div>
+    <div class="ai-quick-prompts">
+      <button class="quick-chip" onclick="setPrompt('A book for someone who loved Project Hail Mary')">Like Project Hail Mary</button>
+      <button class="quick-chip" onclick="setPrompt('A gripping thriller I can finish in a weekend')">Quick thriller</button>
+      <button class="quick-chip" onclick="setPrompt('Historical fiction with strong female characters')">Historical + female lead</button>
+      <button class="quick-chip" onclick="setPrompt('Something great for a book club discussion')">Great for book clubs</button>
+    </div>
+    <div class="ai-result-area" id="aiResultArea">
+      <div class="ai-result-label">✦ AI Recommendations</div>
+      <div class="ai-result-text" id="aiResultText"></div>
+      <div class="ai-result-books" id="aiResultBooks"></div>
+    </div>
+  </div>
+
+  <!-- AI PERSONALISED RECOMMENDATIONS -->
+  <div class="reco-section">
+    <div class="reco-header">
+      <div class="reco-title"><div class="reco-dot"></div> Recommended for You</div>
+      <button class="reco-refresh" id="recoRefreshBtn" onclick="loadRecommendations()">↻ Refresh</button>
+    </div>
+    <div class="reco-grid" id="recoGrid">
+      <div class="reco-skeleton"></div>
+      <div class="reco-skeleton"></div>
+      <div class="reco-skeleton"></div>
+      <div class="reco-skeleton"></div>
+    </div>
+  </div>
+
+  <div class="section-divider">All Books</div>
 
   <!-- SEARCH -->
   <div class="search-row">
@@ -675,6 +781,7 @@
     </div>
     <div class="modal-body">
       <div class="modal-genre-tag" id="mGenre">Genre</div>
+      <div class="modal-ai-insight" id="mAiInsight" style="display:none"><strong>✦ AI Insight</strong><span id="mAiInsightText"></span></div>
       <p class="modal-desc" id="mDesc">Description</p>
       <div class="modal-tags" id="mTags"></div>
       <div class="modal-meta">
@@ -731,6 +838,7 @@
 
         // Initial render
         applyFilters();
+        loadRecommendations();
     });
 
     /* --- 2. ACCESSIBILITY FUNCTIONS --- */
@@ -892,7 +1000,9 @@
             `<span class="modal-tag" onclick="quickFilterTag('${t}')">${t}</span>`
         ).join('');
         
+        document.getElementById('mAiInsight').style.display = 'none';
         document.getElementById('modalOverlay').classList.add('open');
+        loadModalInsight(b);
     }
 
     function quickFilterTag(tag) {
@@ -912,6 +1022,198 @@
 
     function closeModalDirect() {
         document.getElementById('modalOverlay').classList.remove('open');
+    }
+
+    // ===== SMART LOCAL SEARCH (no API needed) =====
+    const searchKeywords = {
+        // Mood/vibe → genres + tags
+        'thriller': ['Mystery'], 'mystery': ['Mystery'], 'suspense': ['Mystery'], 'crime': ['Mystery'],
+        'space': ['Sci-Fi'], 'sci-fi': ['Sci-Fi'], 'science fiction': ['Sci-Fi'], 'futuristic': ['Sci-Fi'], 'robot': ['Sci-Fi'], 'alien': ['Sci-Fi'],
+        'fantasy': ['Fiction'], 'magic': ['Fiction'], 'wizard': ['Fiction'], 'dragon': ['Fiction'],
+        'history': ['History'], 'historical': ['History', 'Fiction'], 'war': ['History', 'Fiction'], 'medieval': ['History'],
+        'biography': ['Biography'], 'memoir': ['Biography'], 'true story': ['Biography'], 'real life': ['Biography'],
+        'non-fiction': ['Non-Fiction'], 'nonfiction': ['Non-Fiction'], 'science': ['Non-Fiction', 'Sci-Fi'], 'psychology': ['Non-Fiction'],
+        // Length
+        'quick': ['Quick Read'], 'short': ['Quick Read'], 'weekend': ['Quick Read'], 'fast': ['Quick Read'],
+        // Quality signals
+        'award': ['Award Winner'], 'prize': ['Award Winner'], 'classic': ['Classic'],
+        'club': ['Community Pick'], 'discussion': ['Community Pick'], 'popular': ['Community Pick'],
+        // Author/title matching handled separately
+    };
+
+    const bookKeywords = {
+        // Map book IDs to extra match words
+        1:  ['psychology', 'silent', 'murder', 'dark', 'twisty', 'psychological', 'whodunit'],
+        2:  ['words', 'language', 'oxford', 'women', 'female', 'historical', 'australian', 'local'],
+        3:  ['survivor', 'education', 'family', 'inspiring', 'rural', 'cambridge', 'female', 'women'],
+        4:  ['desert', 'epic', 'politics', 'dune', 'sand', 'empire', 'long', 'saga'],
+        5:  ['humanity', 'evolution', 'civilization', 'big picture', 'mind-blowing', 'human'],
+        6:  ['ww2', 'world war', 'germany', 'nazi', 'death', 'powerful', 'emotional', 'young'],
+        7:  ['astronaut', 'survival', 'alone', 'funny', 'heartwarming', 'mars', 'hail mary'],
+        8:  ['civilization', 'inequality', 'guns', 'germs', 'steel', 'why', 'global'],
+        9:  ['ww2', 'world war', 'france', 'blind', 'radio', 'emotional', 'powerful', 'female'],
+        10: ['astronaut', 'mars', 'survival', 'funny', 'rescue', 'stranded', 'engineer'],
+        11: ['creativity', 'art', 'inspiration', 'self-help', 'creative', 'gilbert'],
+        12: ['family', 'japan', 'korea', 'immigration', 'saga', 'generations', 'epic', 'women'],
+        13: ['obama', 'politics', 'america', 'inspiring', 'powerful', 'female', 'women', 'first lady'],
+        14: ['magic', 'kvothe', 'music', 'coming of age', 'epic', 'fantasy', 'rothfuss'],
+        15: ['thinking', 'decisions', 'brain', 'behavior', 'bias', 'cognitive', 'mind'],
+        16: ['trade', 'east', 'west', 'silk', 'roads', 'global', 'civilizations'],
+    };
+
+    function doAISearch() {
+        const query = document.getElementById('aiSearchInput').value.trim().toLowerCase();
+        if (!query) return;
+
+        const resultArea = document.getElementById('aiResultArea');
+        const resultText = document.getElementById('aiResultText');
+        const resultBooks = document.getElementById('aiResultBooks');
+        resultArea.classList.add('visible');
+        resultBooks.innerHTML = '';
+
+        // Score every book against the query
+        const scores = books.map(book => {
+            let score = 0;
+            const words = query.split(/\s+/);
+
+            // Direct title/author match — highest weight
+            if (book.title.toLowerCase().includes(query)) score += 20;
+            if (book.author.toLowerCase().includes(query)) score += 15;
+            words.forEach(w => {
+                if (book.title.toLowerCase().includes(w)) score += 8;
+                if (book.author.toLowerCase().includes(w)) score += 6;
+                if (book.genre.toLowerCase().includes(w)) score += 5;
+                book.tags.forEach(t => { if (t.toLowerCase().includes(w)) score += 4; });
+                book.desc.toLowerCase().split(' ').forEach(d => { if (d.includes(w) && w.length > 3) score += 2; });
+            });
+
+            // Keyword → genre/tag mapping
+            Object.entries(searchKeywords).forEach(([kw, targets]) => {
+                if (query.includes(kw)) {
+                    targets.forEach(target => {
+                        if (book.genre === target) score += 6;
+                        if (book.tags.includes(target)) score += 4;
+                    });
+                }
+            });
+
+            // Extra book-specific keywords
+            const extras = bookKeywords[book.id] || [];
+            words.forEach(w => {
+                if (extras.some(e => e.includes(w) || w.includes(e))) score += 5;
+            });
+            extras.forEach(e => { if (query.includes(e)) score += 7; });
+
+            // "like X" matching — find mentioned book and match its genre/tags
+            const likeMatch = query.match(/like (.+)/);
+            if (likeMatch) {
+                const refTitle = likeMatch[1].trim();
+                const refBook = books.find(b => b.title.toLowerCase().includes(refTitle) || refTitle.includes(b.title.toLowerCase().split(' ')[0]));
+                if (refBook && refBook.id !== book.id) {
+                    if (book.genre === refBook.genre) score += 8;
+                    book.tags.forEach(t => { if (refBook.tags.includes(t)) score += 3; });
+                    // Same author bonus
+                    if (book.author === refBook.author) score += 10;
+                }
+            }
+
+            return { book, score };
+        });
+
+        const top = scores.filter(s => s.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
+
+        if (top.length === 0) {
+            resultText.textContent = "No strong matches found. Try different words, or use the filters below.";
+            return;
+        }
+
+        // Build a natural-sounding summary
+        const genres = [...new Set(top.map(s => s.book.genre))];
+        const genreText = genres.length === 1 ? genres[0] : genres.slice(0,-1).join(', ') + ' and ' + genres.slice(-1);
+        resultText.textContent = `Found ${top.length} match${top.length > 1 ? 'es' : ''} for "${document.getElementById('aiSearchInput').value.trim()}" — ${genreText} pick${top.length > 1 ? 's' : ''} from your library:`;
+
+        top.forEach(({ book }) => {
+            const chip = document.createElement('button');
+            chip.className = 'ai-book-chip';
+            chip.textContent = `${book.emoji} ${book.title}`;
+            chip.onclick = () => openModal(book.id);
+            resultBooks.appendChild(chip);
+        });
+    }
+
+    function setPrompt(text) {
+        document.getElementById('aiSearchInput').value = text;
+        doAISearch();
+    }
+
+    // ===== LOCAL RECOMMENDATIONS (top rated by genre match) =====
+    function loadRecommendations() {
+        const grid = document.getElementById('recoGrid');
+        const btn = document.getElementById('recoRefreshBtn');
+        btn.disabled = true;
+
+        // Rotate recommendations on each refresh using a simple offset
+        const offset = parseInt(localStorage.getItem('recoOffset') || '0');
+        localStorage.setItem('recoOffset', (offset + 4) % books.length);
+
+        // Score: prefer Sci-Fi/Fantasy (user's genres), then top rated, shuffled by offset
+        const preferred = ['Sci-Fi', 'Fantasy', 'Fiction'];
+        const alreadyRead = ['The Way of Kings', 'Project Hail Mary', 'Dune'];
+        const whyMap = {
+            'Sci-Fi':      'Matches your Sci-Fi interest',
+            'Fantasy':     'Matches your Fantasy interest',
+            'Fiction':     'Highly rated community pick',
+            'Mystery':     'Popular in your community',
+            'Biography':   'Top rated memoir',
+            'Non-Fiction': 'Highly rated non-fiction',
+            'History':     'Top rated history pick',
+        };
+
+        const scored = books
+            .filter(b => !alreadyRead.includes(b.title))
+            .map((b, i) => ({
+                book: b,
+                score: (preferred.includes(b.genre) ? 10 : 0) + b.rating + ((i + offset) % 5) * 0.1
+            }))
+            .sort((a, b) => b.score - a.score);
+
+        // Pick 4, rotating with offset so Refresh shows different ones
+        const picks = [...scored.slice(offset % Math.max(scored.length - 4, 1), offset % Math.max(scored.length - 4, 1) + 4)];
+        if (picks.length < 4) picks.push(...scored.slice(0, 4 - picks.length));
+
+        grid.innerHTML = picks.slice(0, 4).map(({ book }) => `
+            <div class="reco-card" onclick="openModal(${book.id})">
+                <div class="reco-why">✦ ${whyMap[book.genre] || 'Recommended for you'}</div>
+                <div class="reco-cover">${book.emoji}</div>
+                <div class="reco-book-title">${book.title}</div>
+                <div class="reco-book-author">${book.author}</div>
+                <div class="reco-book-genre">${book.genre}</div>
+            </div>`).join('');
+
+        btn.disabled = false;
+    }
+
+    // ===== MODAL INSIGHT (local, based on genre/tags) =====
+    function loadModalInsight(book) {
+        const el = document.getElementById('mAiInsight');
+        const txt = document.getElementById('mAiInsightText');
+        const userGenres = ['Sci-Fi', 'Fantasy'];
+        let insight = '';
+        if (userGenres.includes(book.genre)) {
+            insight = `Right in your wheelhouse — you've been loving ${book.genre} lately.`;
+        } else if (book.tags.includes('Quick Read')) {
+            insight = 'A quick read — easy to finish before your next club meeting.';
+        } else if (book.tags.includes('Award Winner') && book.rating >= 4.5) {
+            insight = `Award-winning and rated ${book.rating}/5 — one of the community's favourites.`;
+        } else if (book.tags.includes('Community Pick')) {
+            insight = 'A community favourite — great for sparking book club discussion.';
+        } else if (book.rating >= 4.5) {
+            insight = `Rated ${book.rating}/5 — consistently loved by readers like you.`;
+        } else {
+            insight = `A well-regarded ${book.genre.toLowerCase()} title with ${book.readers} community readers.`;
+        }
+        el.style.display = 'block';
+        txt.textContent = ' ' + insight;
     }
 </script>
 </body>
